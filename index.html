@@ -18,15 +18,22 @@
             //circle starting position
             var x = canvas.width/2;
             var y = canvas.height-30;
+            //circle radius
+            var ballRadius = 10;
+            var ballFillColor = "#0095DD";
             
             //circle centre position deltas
             var dx = 2;
             var dy = -2;
 
-            function drawBall(){
+            function drawBall(fill){
+                if (fill === undefined){
+                    fill = "#0095DD";
+                }
+                
                 context.beginPath();
-                context.arc(x, y, 10, 0, Math.PI*2);
-                context.fillStyle = "#0095DD";
+                context.arc(x, y, ballRadius, 0, Math.PI*2);
+                context.fillStyle = fill;
                 context.fill();
                 context.closePath();
             }
@@ -35,12 +42,27 @@
                 //clear the canvas
                 context.clearRect(0, 0, canvas.width, canvas.height);
 
-                //draw the cricle
-                drawBall();
+                //collision detection with canvas bounds
+                if (x + dx < ballRadius || x + dx > canvas.width-ballRadius){
+                    dx = -dx;
+                    ballFillColor = "rgba("+Math.floor(Math.random()*255)+","
+                                            +Math.floor(Math.random()*255)+","
+                                            +Math.floor(Math.random()*255)+",1)";
+                }
+
+                if (y + dy < ballRadius || y + dy > canvas.height-ballRadius){
+                    dy = -dy;
+                    ballFillColor = "rgba("+Math.floor(Math.random()*255)+","
+                                            +Math.floor(Math.random()*255)+","
+                                            +Math.floor(Math.random()*255)+",1)";
+                }
 
                 //update ball position
                 x += dx;
                 y += dy;
+
+                //draw the cricle
+                drawBall(ballFillColor);
             }
 
             //call draw() every 10 ms
